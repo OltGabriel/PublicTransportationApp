@@ -2,27 +2,43 @@
 <html>
     <head lang=en>
         <meta charset = "UTF-8">
-        <meta name = "viewpoint" content = "width=device-width, initial-scale = 1.0">
+        <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
         <title>ShareLoc</title>
+        <link rel="stylesheet" href="interface.css">
     </head>
     
     <body>
-        <div class = taskbar> <!--options for the taskbar-->
-            <h1>Text</h1>
-            
-            <!--Menu-->
-            <div class = menu>
-
+        <div class="taskBar"> <!--options for the taskbar-->
+            <div class = "leftSide">
+                <!--icon-->
+                <!--Menu-->
+                <button class="menu">
+                    
+                </button>
             </div>
 
-            <!--Search --it will be a bar bellow the title-->
-            <div class = search-bar>
-                <!--It shows previous searches and pinpoints locations on map-->
+
+            <div class = "center">
+                <div class="searchBar">
+                    <button class="search"></button>
+                </div>
+            </div>
+            <div class="rightSide">
+
             </div>
             <!---->
+
         </div>
-        <div>
-            
+        <div class="sideBar"> <!--options for the sidebar-->
+            <nav>
+                <li>Walk</li>
+                <li>Car</li>
+                <li>Buss</li>
+                <li>Train</li>
+            </nav>
+        </div>
+        <div class="mapImage">
+            <!--canvas templates + don't forget to add index for priorities shown-->
         </div>
     </body>
 </html>
