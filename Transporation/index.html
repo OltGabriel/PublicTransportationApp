@@ -2,25 +2,199 @@
 <html>
     <head lang=en>
         <meta charset = "UTF-8">
-        <meta name = "viewpoint" content = "width=device-width, initial-scale = 1.0">
-        <link href="interface.css" rel="stylesheet"/>
+        <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
         <title>ShareLoc</title>
+        <link rel="stylesheet" href="interface.css">
+        <!--Leaflet-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
     </head>
     
     <body>
-        <div id = "htaskbar"> <!--options for the horizontal taskbar-->
-            <h1>Sharelock</h1>
-            <!--Menu-->
-            <div id = "menu">
-                
+        <!--Page Header-->
+       <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-subway"></i>
+                    <div>
+                        <h1>ShareLoc</h1>
+                        <div class="subtitle">Choose your next destination and explore</div>
+                    </div>
+                </div>
+                <div class="user-controls">
+                    <button class="btn btn-secondary" id="locationBtn">
+                        <i class="fas fa-location-arrow"></i> Detect Location
+                    </button>
+                    <button class="btn btn-primary" id="planRouteBtn">
+                        <i class="fas fa-route"></i> Find Routes
+                    </button>
+                </div>
             </div>
-
-             <!--Search --it will be a bar bellow the title-->
-            <div id = "search-bar">
-                <!--It shows previous searches and pinpoints locations on map-->
-                <!--Insert search image and make it clickable-->
-            </div>
-            <!---->
         </div>
+    </header>
+
+    <div class="container">
+        <!--Sending location data-->
+        <div class="main-content">
+            <div class="search-panel">
+                <h2><i class="fas fa-search-location"></i> Plan Your Journey</h2>
+                
+                <!--CURRENT LOCATION-->
+                <div class="input-group">
+                    <label for="from">From (Current Location)</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="from" placeholder="Click map or use your location" readonly>
+                    </div>
+                    <div class="map-controls">
+                        <button class="btn btn-secondary" id="useCurrentLocation">
+                            <i class="fas fa-location-arrow"></i> Use My Location
+                        </button>
+                        <button class="btn btn-secondary" id="clearStart">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <!--DESTINATION-->
+                <div class="input-group">
+                    <label for="to">To (Destination)</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-flag-checkered"></i>
+                        <input type="text" id="to" placeholder="Click on map to select destination" readonly>
+                    </div>
+                    <div class="map-controls">
+                        <button class="btn btn-secondary" id="searchDestination">
+                            <i class="fas fa-search"></i> Search Destination
+                        </button>
+                        <button class="btn btn-secondary" id="clearDestination">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <!--TRANSPORTATION OPTIONS-->
+                <div class="input-group">
+                    <label for="mode">Transport Mode</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-bus"></i>
+                        <select id="mode">
+                            <option value="all">All transport modes</option>
+                            <option value="bus">Bus only</option>
+                            <option value="metro">Metro only</option>
+                            <option value="bus_metro">Bus & Metro</option>
+                            <option value="bus_tram">Bus & Tram</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!--TRANSPORTATION ROUTE TYPES-->
+                <div class="route-options">
+                    <div class="route-option active" id="fastest">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <div>Fastest Route</div>
+                    </div>
+                    <div class="route-option" id="cheapest">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div>Cheapest</div>
+                    </div>
+                    <div class="route-option" id="fewestTransfers">
+                        <i class="fas fa-exchange-alt"></i>
+                        <div>Fewest Transfers</div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+        
+        <!--RESULTS-->
+        <div class="results-panel" id="resultsPanel">
+            <div class="results-header">
+                <h2><i class="fas fa-list-alt"></i> Recommended Routes</h2>
+                <div class="time-display">
+                    <i class="far fa-clock"></i> <span id="currentTime">Loading...</span>
+                </div>
+            </div>
+            
+            <div id="routesContainer">
+                <div class="route-card">
+                    <div class="route-header">
+                        <div class="route-title">Select locations on the map</div>
+                        <div class="route-time">-- min</div>
+                    </div>
+                    
+                    <div class="route-details">
+                        <div class="transport-icon bus">
+                            <i class="fas fa-map"></i>
+                        </div>
+                        <div>
+                            <div><strong>Set your start and destination points</strong></div>
+                            <div>Click "Use My Location" and then click on the map for destination</div>
+                        </div>
+                    </div>
+                    
+                    <div class="route-stops">
+                        <div class="stop">
+                            <div class="stop-dot"></div>
+                            <div>Start location</div>
+                        </div>
+                        <div class="stop">
+                            <div class="stop-dot last"></div>
+                            <div>Destination</div>
+                        </div>
+                    </div>
+                    
+                    <div class="route-info">
+                        <div><i class="fas fa-info-circle"></i> No route planned yet</div>
+                        <div><i class="fas fa-coins"></i> $0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!--LAST SECTION-->
+        <div class="multimedia-section">
+            <div class="media-card" onclick="openVideoGuide()">
+                <video controls poster="./Images/bus_img.jpg">
+                    <source src="./Videos/istockphoto-532982372-640_adpp_is.mp4" type="video/mp4">
+                </video>
+                <div class="media-content">
+                    <h4>How to Use ShareLoc</h4>
+                    <p>A quick guide to planning your journey with our interactive map.</p>
+                </div>
+            </div>
+            
+            <div class="media-card" onclick="openSafetyInfo()">
+                <img src="./Images/bus_img2.jpg" alt="Bus interior">
+                <div class="media-content">
+                    <h4>Transit Safety</h4>
+                    <p>Learn about the safety measures</p>
+                </div>
+            </div>
+            
+            <div class="media-card" onclick="openStationTour()">
+                <img src="./Images/bus_img3.jpg" alt="Metro station">
+                <div class="media-content">
+                    <h4>Virtual Station Tour</h4>
+                    <p>Explore Central Station's facilities and accessibility features.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Leaflet-->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <script src="setup.js"></script>
     </body>
 </html>
